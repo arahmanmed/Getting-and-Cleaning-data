@@ -49,51 +49,51 @@ activities <- read.table("UCI HAR Dataset/activity_labels.txt", col.names = c("c
 Xtotal <- rbind(xtrain, xtest)
 Ytotal <- rbind(ytrain, ytest)
 Subtotal <- rbind(subjectrain, subjectest)
-Mergedata<-cbind(Subtotal,Xtotal,Ytotal)
+Mergedata<-cbind(Subtotal,Ytotal,Xtotal)
 
 #2. Extracting the measurements on the mean and standard deviation for each measurement
-MeanSd <- Mergedata %>% select(subject, code, contains("mean"), contains("std"))
+Tidydata<-Mergedata %>% select(subject, code, contains("mean"), contains("std"))
 
-MeanSd
 
 #3. Using descriptive activity names to name the activities in the data set
 
-Activitylabel<- activities[Mergedata$code, 2]
+Activitylabel<- activities[Tidydata$code, 2]
 
 #4. Appropriately labels the data set with descriptive variable names
 
-names(Mergedata)[2] = "activity"
+names(Tidydata)[2]="activity"
 
-names(Mergedata)<-gsub("Acc", "Accelerometer", names(Mergedata))
+names(Tidydata)<-gsub("Acc", "Accelerometer", names(Tidydata))
 
-names(Mergedata)<-gsub("Gyro", "Gyroscope", names(Mergedata))
+names(Tidydata)<-gsub("Gyro", "Gyroscope", names(Tidydata))
 
-names(Mergedata)<-gsub("BodyBody", "Body", names(Mergedata))
+names(Tidydata)<-gsub("BodyBody", "Body", names(Tidydata))
 
-names(Mergedata)<-gsub("Mag", "Magnitude", names(Mergedata))
+names(Tidydata)<-gsub("Mag", "Magnitude", names(Tidydata))
 
-names(Mergedata)<-gsub("^t", "Time", names(Mergedata))
+names(Tidydata)<-gsub("^t", "Time", names(Tidydata))
 
-names(Mergedata)<-gsub("^f", "Frequency", names(Mergedata))
+names(Tidydata)<-gsub("^f", "Frequency", names(Tidydata))
 
-names(Mergedata)<-gsub("tBody", "TimeBody", names(Mergedata))
+names(Tidydata)<-gsub("tBody", "TimeBody", names(Tidydata))
 
-names(Mergedata)<-gsub("-mean()", "Mean", names(Mergedata), ignore.case = TRUE)
+names(Tidydata)<-gsub("-mean()", "Mean", names(Tidydata), ignore.case = TRUE)
 
-names(Mergedata)<-gsub("-std()", "STD", names(Mergedata), ignore.case = TRUE)
+names(Tidydata)<-gsub("-std()", "STD", names(Tidydata), ignore.case = TRUE)
 
-names(Mergedata)<-gsub("-freq()", "Frequency", names(Mergedata), ignore.case = TRUE)
+names(Tidydata)<-gsub("-freq()", "Frequency", names(Tidydata), ignore.case = TRUE)
 
-names(Mergedata)<-gsub("angle", "Angle", names(Mergedata))
+names(Tidydata)<-gsub("angle", "Angle", names(Tidydata))
 
-names(Mergedata)<-gsub("gravity", "Gravity", names(Mergedata))
+names(Tidydata)<-gsub("gravity", "Gravity", names(Tidydata))
 
 #5. Creates a second, independent tidy data set from step 4 with the average of each variable for each activity and each subject
 
-Tidydata <- Mergedata %>%
+Finaldat <- Tidydata %>%
             group_by(subject, activity) %>%
             summarise_all(funs(mean))
-write.table(Tidydata, "Tidydata.txt", row.name=FALSE)
+write.table(Finaldat, "Tidydata.txt", row.name=FALSE)
 
-str(Tidydata)
-Tidydata
+
+str(Finaldat)
+
